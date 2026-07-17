@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-"""Install (or uninstall) the plugin into Krita's pykrita resources folder.
-
-Copies files (does not create symlinks), matching Krita's manual install docs.
-"""
-
-from __future__ import annotations
-
 import argparse
 import os
 import platform
@@ -25,7 +17,6 @@ def krita_pykrita_dir() -> Path:
         if not appdata:
             raise SystemExit("APPDATA is not set; cannot locate Krita resources.")
         return Path(appdata) / "krita" / "pykrita"
-    # Linux / other Unix
     xdg = os.environ.get("XDG_DATA_HOME", str(Path.home() / ".local/share"))
     return Path(xdg) / "krita" / "pykrita"
 
@@ -84,7 +75,9 @@ def uninstall() -> None:
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Install or uninstall the Comic Page Guides plugin into Krita."
+    )
     parser.add_argument(
         "--uninstall",
         action="store_true",

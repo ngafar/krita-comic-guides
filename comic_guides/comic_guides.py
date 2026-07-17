@@ -1,8 +1,4 @@
-"""Krita Extension: one-click US comic page with guides and 9-panel grid."""
-
-from __future__ import annotations
-
-from krita import Extension, Krita
+from krita import Extension
 
 from .guides import GuideError, apply_comic_guides, create_comic_document
 from .presets import DEFAULT_PRESET
@@ -20,7 +16,6 @@ def _qt_widgets():
 
 
 def _exec(widget):
-    """Run a modal dialog (PyQt5 ``exec_`` / PyQt6 ``exec``)."""
     if hasattr(widget, "exec"):
         return widget.exec()
     return widget.exec_()

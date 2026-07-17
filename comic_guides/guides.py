@@ -1,11 +1,3 @@
-"""Apply comic presets to a Krita document via GuidesConfig.
-
-This module imports ``krita`` and is only meant to run inside Krita.
-Preset math lives in ``presets.py``.
-"""
-
-from __future__ import annotations
-
 from .panel_grid import apply_nine_panel_grid
 from .presets import (
     DEFAULT_PRESET,
@@ -20,11 +12,10 @@ from .presets import (
 
 
 class GuideError(Exception):
-    """Raised when guides cannot be applied."""
+    pass
 
 
 def create_comic_document(preset: ComicPreset = DEFAULT_PRESET, ppi: int = DOCUMENT_PPI):
-    """Create an 11×17 comic page, open it in the active window, and return it."""
     from krita import Krita
 
     app = Krita.instance()
@@ -53,7 +44,6 @@ def create_comic_document(preset: ComicPreset = DEFAULT_PRESET, ppi: int = DOCUM
 
 
 def _document_ppi(document) -> tuple[float, float]:
-    """Return (x_ppi, y_ppi). Prefer xRes/yRes; fall back to resolution()."""
     x_ppi = float(document.xRes())
     y_ppi = float(document.yRes())
     if x_ppi <= 0 or y_ppi <= 0:
@@ -75,10 +65,6 @@ def apply_comic_guides(
     nine_panel: bool = False,
     require_page_size: bool = False,
 ) -> str:
-    """Place comic guides on *document*.
-
-    Returns a short status message. Raises ``GuideError`` on failure.
-    """
     from krita import GuidesConfig
 
     if document is None:
@@ -124,7 +110,7 @@ def apply_comic_guides(
                     document, preset, x_ppi, y_ppi, replace=replace
                 )
             )
-        except Exception as exc:  # noqa: BLE001 — surface Krita API failures
+        except Exception as exc:
             raise GuideError(f"Guides applied, but 9-panel grid failed: {exc}") from exc
 
     document.refreshProjection()

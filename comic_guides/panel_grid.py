@@ -1,22 +1,8 @@
-"""Nine-panel layout as individual vector shapes.
-
-Krita document guides all share one color, so panels are drawn on a vector
-layer (distinct stroke) that artists can hide before export.
-
-Each panel is its own rectangle shape (Panel 1–9, left-to-right, top-to-bottom)
-so they can be selected, dragged, or deleted independently.
-
-SVG coordinates are in **document pixels** (not points).
-"""
-
-from __future__ import annotations
-
 from .presets import ComicPreset, inches_to_pixels, nine_panel_rects_in
 
 NINE_PANEL_LAYER_NAME = "Comic 9-Panel Grid"
-# Warm orange — distinct from Krita’s usual guide teal/cyan.
 NINE_PANEL_COLOR = "#E67E22"
-NINE_PANEL_OPACITY = 255  # 0–255 (100%)
+NINE_PANEL_OPACITY = 255
 
 
 def _panel_rect_svg(
@@ -31,7 +17,6 @@ def _panel_rect_svg(
     color: str,
     panel_id: str,
 ) -> str:
-    """One top-level rect — no wrapping group, so Krita imports a single shape."""
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      width="{page_w:.4f}px" height="{page_h:.4f}px"
@@ -55,7 +40,6 @@ def _find_layer_by_name(document, name: str):
 
 
 def _make_shapes_editable(shapes) -> None:
-    """Ensure shapes can be selected and transformed with the Select Shapes tool."""
     for shape in shapes or []:
         if hasattr(shape, "setSelectable"):
             shape.setSelectable(True)
@@ -74,7 +58,6 @@ def apply_nine_panel_grid(
     replace: bool = True,
     color: str = NINE_PANEL_COLOR,
 ) -> str:
-    """Create or replace the nine-panel vector layer. Returns a short status."""
     existing = _find_layer_by_name(document, NINE_PANEL_LAYER_NAME)
     if existing is not None:
         if not replace:

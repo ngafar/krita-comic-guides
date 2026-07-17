@@ -10,6 +10,9 @@ from .presets import (
     page_size_inches,
 )
 
+# SVG/CSS named color — pale blue for bleed/trim/safe guides.
+GUIDE_COLOR_NAME = "powderblue"
+
 
 class GuideError(Exception):
     pass
@@ -67,6 +70,11 @@ def apply_comic_guides(
 ) -> str:
     from krita import GuidesConfig
 
+    try:
+        from PyQt6.QtGui import QColor
+    except ImportError:
+        from PyQt5.QtGui import QColor
+
     if document is None:
         raise GuideError("No active document. Open an 11×17 in comic page first.")
 
@@ -93,6 +101,7 @@ def apply_comic_guides(
 
     guides.setVerticalGuides(merge_guides(existing_v, vertical_px, replace=replace))
     guides.setHorizontalGuides(merge_guides(existing_h, horizontal_px, replace=replace))
+    guides.setColor(QColor(GUIDE_COLOR_NAME))
     guides.setVisible(visible)
     guides.setLocked(locked)
     guides.setSnap(snap)

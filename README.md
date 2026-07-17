@@ -8,13 +8,16 @@ A small Krita Python plugin that:
 
 ## Install
 
-1. Download [`comic-guides.zip`](https://github.com/ngafar/krita-comic-guides/releases/latest/download/comic-guides.zip) from the [latest release](https://github.com/ngafar/krita-comic-guides/releases/latest).
-2. In Krita: **Tools → Scripts → Import Python Plugin…** and choose the zip.
+1. Download [`comic-guides.zip`](https://github.com/ngafar/krita-comic-guides/releases/latest/download/comic-guides.zip).
+2. In Krita: **Tools → Scripts → Import Python Plugin from File** and choose the zip.
 3. Restart Krita.
-4. **Settings → Configure Krita → Python Plugin Manager** → enable **Comic Page Guides**.
-5. Restart Krita again.
 
-The script appears under **Tools → Scripts → New US Comic Page (11×17)**.
+## Usage 
+
+**Tools → Scripts → New US Comic Page (11×17)**.
+
+If you do not see the script, you might need to enable the plugin: **Settings → Configure Krita → Python Plugin Manager** → enable **Comic Page Guides**.
+
 
 ## Layout
 
@@ -30,11 +33,4 @@ To quickly install from this repo:
 
 ```bash
 uv run python scripts/install.py --force
-```
-
-To publish a new downloadable zip, push a version tag (creates a GitHub Release with `comic-guides.zip`):
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
 ```

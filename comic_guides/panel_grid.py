@@ -17,13 +17,20 @@ def _panel_rect_svg(
     color: str,
     panel_id: str,
 ) -> str:
+    # SVG strokes are centered on the path; inset by half the stroke so the
+    # line sits fully inside the panel bounds.
+    inset = stroke / 2.0
+    ix0 = x0 + inset
+    iy0 = y0 + inset
+    ix1 = x1 - inset
+    iy1 = y1 - inset
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      width="{page_w:.4f}px" height="{page_h:.4f}px"
      viewBox="0 0 {page_w:.4f} {page_h:.4f}">
   <rect id="{panel_id}"
-        x="{x0:.4f}" y="{y0:.4f}"
-        width="{x1 - x0:.4f}" height="{y1 - y0:.4f}"
+        x="{ix0:.4f}" y="{iy0:.4f}"
+        width="{ix1 - ix0:.4f}" height="{iy1 - iy0:.4f}"
         fill="none" stroke="{color}" stroke-width="{stroke:.4f}" />
 </svg>
 """

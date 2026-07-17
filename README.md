@@ -1,12 +1,16 @@
 # Krita Comic Guides
 
-A small Krita Python plugin that places **bleed**, **trim**, and **safe-area** guides on comic pages. Guides are real Krita guides (not painted lines), so they stay out of exports.
+A small Krita Python plugin that creates a ready-to-draw **US comic page** in one click: an **11 × 17 in @ 600 PPI** document with bleed / trim / safe guides and a 9-panel vector grid.
 
-Intended document: **11 × 17 in at 600 PPI** (works at other PPI; guides scale with resolution).
+## What one click does
 
-## Standard US Comic preset
+**Tools → Scripts → New US Comic Page (11×17)**
 
-Matches Photoshop Guide Layout exports (`TrimLine.gds`, `SafeArea.gds`):
+1. Creates a new RGBA document: 11 × 17 in at 600 PPI (6600 × 10200 px)
+2. Places bleed, trim, and safe-area guides
+3. Adds nine editable orange panel rectangles on layer `Comic 9-Panel Grid`
+
+## Layout (from Photoshop Guide Layout exports)
 
 | Zone | Margins | Size on 11×17 |
 |------|---------|----------------|
@@ -14,14 +18,12 @@ Matches Photoshop Guide Layout exports (`TrimLine.gds`, `SafeArea.gds`):
 | Trim | 0.625″ | 9.75″ × 15.75″ |
 | Safe area | 1.000″ | 9″ × 15″ |
 
-Guide positions (inches):
-
 ```text
 Vertical:   0.500, 0.625, 1.000, 10.000, 10.375, 10.500
 Horizontal: 0.500, 0.625, 1.000, 16.000, 16.375, 16.500
 ```
 
-Optional **9-panel grid**: nine separate orange vector rectangles (`Panel 1`–`Panel 9`) inside the safe area with **0.125″ gutters**, on layer `Comic 9-Panel Grid`. Drag or delete each with **Select Shapes**; hide the layer before export.
+9-panel grid: `Panel 1`–`Panel 9` (left→right, top→bottom) with **0.125″ gutters**. Drag or delete each with **Select Shapes**; hide that layer before export. Guides do not appear in exports.
 
 ## Requirements
 
@@ -52,10 +54,7 @@ Installing alone is not enough — Krita leaves new Python plugins disabled unti
 3. Check **Comic Page Guides** to enable it
 4. Restart Krita again
 
-The menu entries only appear after this step:
-
-- **Tools → Scripts → Comic Page Guides**
-- **Tools → Scripts → Add Standard US Comic Guides**
+Then use **Tools → Scripts → New US Comic Page (11×17)**.
 
 ### Uninstall
 
@@ -63,24 +62,15 @@ The menu entries only appear after this step:
 uv run python scripts/install.py --uninstall
 ```
 
-## Usage
-
-1. Create or open an **11 × 17 in** document at **600 PPI** (or any PPI).
-2. Choose one of:
-   - **Tools → Scripts → Comic Page Guides** — dialog with options
-   - **Tools → Scripts → Add Standard US Comic Guides** — one-click defaults
-
-Default options: replace existing guides, show, lock, snap, and the 9-panel grid.
-
 ## Layout
 
 ```text
 comic_guides.desktop
 comic_guides/
 ├── __init__.py          # registers the Extension
-├── comic_guides.py      # menu actions + dialog
-├── guides.py            # applies GuidesConfig
-├── panel_grid.py        # 9-panel vector overlay
+├── comic_guides.py      # one-click menu action
+├── guides.py            # new document + GuidesConfig
+├── panel_grid.py        # 9-panel vector shapes
 └── presets.py           # inch presets + pixel conversion
 scripts/
 └── install.py           # copy into Krita’s pykrita folder

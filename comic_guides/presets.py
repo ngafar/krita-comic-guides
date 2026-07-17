@@ -54,6 +54,9 @@ PRESETS: dict[str, ComicPreset] = {
 
 DEFAULT_PRESET = STANDARD_US_COMIC
 
+# Default document resolution for one-click new pages.
+DOCUMENT_PPI = 600
+
 
 def inches_to_pixels(inches: float, ppi: float) -> float:
     """Convert an inch measurement to document pixels at the given PPI."""

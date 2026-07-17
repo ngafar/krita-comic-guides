@@ -9,8 +9,10 @@ from __future__ import annotations
 from .panel_grid import apply_nine_panel_grid
 from .presets import (
     DEFAULT_PRESET,
+    DOCUMENT_PPI,
     ComicPreset,
     guide_pixels,
+    inches_to_pixels,
     merge_guides,
     page_matches_preset,
     page_size_inches,
@@ -19,6 +21,35 @@ from .presets import (
 
 class GuideError(Exception):
     """Raised when guides cannot be applied."""
+
+
+def create_comic_document(preset: ComicPreset = DEFAULT_PRESET, ppi: int = DOCUMENT_PPI):
+    """Create an 11×17 comic page, open it in the active window, and return it."""
+    from krita import Krita
+
+    app = Krita.instance()
+    width_px = int(round(inches_to_pixels(preset.page_width_in, ppi)))
+    height_px = int(round(inches_to_pixels(preset.page_height_in, ppi)))
+
+    document = app.createDocument(
+        width_px,
+        height_px,
+        "US Comic Page",
+        "RGBA",
+        "U8",
+        "",
+        ppi,
+    )
+    if document is None:
+        raise GuideError("Could not create a new Krita document.")
+
+    window = app.activeWindow()
+    if window is None:
+        document.close()
+        raise GuideError("No active Krita window to open the new page in.")
+
+    window.addView(document)
+    return document
 
 
 def _document_ppi(document) -> tuple[float, float]:

@@ -32,10 +32,6 @@ STANDARD_US_COMIC = ComicPreset(
     description="Bleed 10×15⅜, trim 9¾×15, safe 9×14¼; 3×3 panels with 0.125″ gutters",
 )
 
-PRESETS: dict[str, ComicPreset] = {
-    STANDARD_US_COMIC.name: STANDARD_US_COMIC,
-}
-
 DEFAULT_PRESET = STANDARD_US_COMIC
 DOCUMENT_PPI = 600
 
@@ -113,35 +109,3 @@ def nine_panel_rects_in(
             y0 = top + row * (panel_h + gutter)
             rects.append((x0, y0, x0 + panel_w, y0 + panel_h))
     return rects
-
-
-def nine_panel_gutter_lines_in(
-    preset: ComicPreset,
-) -> tuple[list[float], list[float]]:
-    left, top, right, bottom = safe_rect_in(preset)
-    width = right - left
-    height = bottom - top
-    cols = preset.panel_cols
-    rows = preset.panel_rows
-    gutter = preset.panel_gutter_in
-
-    panel_w = (width - (cols - 1) * gutter) / cols
-    panel_h = (height - (rows - 1) * gutter) / rows
-
-    vertical: list[float] = []
-    x = left
-    for _ in range(cols - 1):
-        x += panel_w
-        vertical.append(x)
-        vertical.append(x + gutter)
-        x += gutter
-
-    horizontal: list[float] = []
-    y = top
-    for _ in range(rows - 1):
-        y += panel_h
-        horizontal.append(y)
-        horizontal.append(y + gutter)
-        y += gutter
-
-    return vertical, horizontal

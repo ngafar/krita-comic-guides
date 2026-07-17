@@ -1,74 +1,45 @@
-"""Nine-panel layout grid as a colored vector layer.
+"""Nine-panel layout as individual vector shapes.
 
-Krita document guides all share one color, so the 3×3 panel reference is drawn
-on its own vector layer (distinct stroke) that artists can hide before export.
+Krita document guides all share one color, so panels are drawn on a vector
+layer (distinct stroke) that artists can hide before export.
 
-SVG coordinates are in **document pixels** (not points). Using points made the
-grid appear tiny in the corner on high-DPI pages (e.g. 11×17 @ 600 PPI).
+Each panel is its own rectangle shape (Panel 1–9, left-to-right, top-to-bottom)
+so they can be selected, dragged, or deleted independently.
+
+SVG coordinates are in **document pixels** (not points).
 """
 
 from __future__ import annotations
 
-from .presets import (
-    ComicPreset,
-    inches_to_pixels,
-    nine_panel_gutter_lines_in,
-    safe_rect_in,
-)
+from .presets import ComicPreset, inches_to_pixels, nine_panel_rects_in
 
 NINE_PANEL_LAYER_NAME = "Comic 9-Panel Grid"
 # Warm orange — distinct from Krita’s usual guide teal/cyan.
 NINE_PANEL_COLOR = "#E67E22"
-NINE_PANEL_OPACITY = 160  # 0–255
+NINE_PANEL_OPACITY = 255  # 0–255 (100%)
 
 
-def nine_panel_svg(
-    preset: ComicPreset,
-    x_ppi: float,
-    y_ppi: float,
+def _panel_rect_svg(
     *,
-    color: str = NINE_PANEL_COLOR,
+    page_w: float,
+    page_h: float,
+    x0: float,
+    y0: float,
+    x1: float,
+    y1: float,
+    stroke: float,
+    color: str,
+    panel_id: str,
 ) -> str:
-    """Build an SVG 3×3 grid over the safe area in document pixel coordinates."""
-    left, top, right, bottom = safe_rect_in(preset)
-    v_lines, h_lines = nine_panel_gutter_lines_in(preset)
-
-    def x_px(inches: float) -> float:
-        return inches_to_pixels(inches, x_ppi)
-
-    def y_px(inches: float) -> float:
-        return inches_to_pixels(inches, y_ppi)
-
-    page_w = x_px(preset.page_width_in)
-    page_h = y_px(preset.page_height_in)
-    x0, y0 = x_px(left), y_px(top)
-    x1, y1 = x_px(right), y_px(bottom)
-    # ~1 pt stroke, readable at 600 PPI
-    stroke = max(2.0, x_ppi / 72.0)
-
-    parts = [
-        f'<rect x="{x0:.4f}" y="{y0:.4f}" '
-        f'width="{x1 - x0:.4f}" height="{y1 - y0:.4f}" />'
-    ]
-    for vx in v_lines:
-        px = x_px(vx)
-        parts.append(
-            f'<line x1="{px:.4f}" y1="{y0:.4f}" x2="{px:.4f}" y2="{y1:.4f}" />'
-        )
-    for hy in h_lines:
-        py = y_px(hy)
-        parts.append(
-            f'<line x1="{x0:.4f}" y1="{py:.4f}" x2="{x1:.4f}" y2="{py:.4f}" />'
-        )
-    body = "\n    ".join(parts)
-
+    """One top-level rect — no wrapping group, so Krita imports a single shape."""
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
      width="{page_w:.4f}px" height="{page_h:.4f}px"
      viewBox="0 0 {page_w:.4f} {page_h:.4f}">
-  <g id="comic-nine-panel" fill="none" stroke="{color}" stroke-width="{stroke:.4f}">
-    {body}
-  </g>
+  <rect id="{panel_id}"
+        x="{x0:.4f}" y="{y0:.4f}"
+        width="{x1 - x0:.4f}" height="{y1 - y0:.4f}"
+        fill="none" stroke="{color}" stroke-width="{stroke:.4f}" />
 </svg>
 """
 
@@ -81,6 +52,17 @@ def _find_layer_by_name(document, name: str):
         if child.name() == name:
             return child
     return None
+
+
+def _make_shapes_editable(shapes) -> None:
+    """Ensure shapes can be selected and transformed with the Select Shapes tool."""
+    for shape in shapes or []:
+        if hasattr(shape, "setSelectable"):
+            shape.setSelectable(True)
+        if hasattr(shape, "setGeometryProtected"):
+            shape.setGeometryProtected(False)
+        if hasattr(shape, "update"):
+            shape.update()
 
 
 def apply_nine_panel_grid(
@@ -108,20 +90,46 @@ def apply_nine_panel_grid(
     root = document.rootNode()
     root.addChildNode(layer, None)
 
-    svg = nine_panel_svg(preset, x_ppi, y_ppi, color=color)
-    shapes = layer.addShapesFromSvg(svg)
-    if not shapes:
-        raise RuntimeError("Failed to add 9-panel SVG shapes to the vector layer.")
+    page_w = inches_to_pixels(preset.page_width_in, x_ppi)
+    page_h = inches_to_pixels(preset.page_height_in, y_ppi)
+    stroke = max(2.0, x_ppi / 72.0)
 
-    layer.setLocked(True)
+    created = 0
+    for index, (left, top, right, bottom) in enumerate(nine_panel_rects_in(preset), start=1):
+        name = f"Panel {index}"
+        svg = _panel_rect_svg(
+            page_w=page_w,
+            page_h=page_h,
+            x0=inches_to_pixels(left, x_ppi),
+            y0=inches_to_pixels(top, y_ppi),
+            x1=inches_to_pixels(right, x_ppi),
+            y1=inches_to_pixels(bottom, y_ppi),
+            stroke=stroke,
+            color=color,
+            panel_id=f"panel-{index}",
+        )
+        shapes = layer.addShapesFromSvg(svg)
+        if not shapes:
+            raise RuntimeError(f"Failed to add vector shape for {name}.")
+        for shape in shapes:
+            if hasattr(shape, "setName"):
+                shape.setName(name)
+        _make_shapes_editable(shapes)
+        created += len(shapes)
+
+    if created == 0:
+        raise RuntimeError("Failed to add panel shapes to the vector layer.")
+
+    layer.setLocked(False)
     if hasattr(layer, "setOpacity"):
         layer.setOpacity(NINE_PANEL_OPACITY)
 
+    document.setActiveNode(layer)
     document.refreshProjection()
     document.setModified(True)
     gutter = preset.panel_gutter_in
     return (
-        f"Added “{NINE_PANEL_LAYER_NAME}” "
+        f"Added “{NINE_PANEL_LAYER_NAME}” with {created} separate panel shapes "
         f"({preset.panel_cols}×{preset.panel_rows}, {gutter}\" gutters, {color}). "
-        f"Hide or delete it before export."
+        f"Use Select Shapes to drag or delete each panel; hide the layer before export."
     )

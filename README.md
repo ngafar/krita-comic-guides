@@ -21,7 +21,7 @@ Vertical:   0.500, 0.625, 1.000, 10.000, 10.375, 10.500
 Horizontal: 0.500, 0.625, 1.000, 16.000, 16.375, 16.500
 ```
 
-Optional **9-panel grid**: 3×3 inside the safe area with **0.125″ gutters**, drawn as an orange vector layer (`Comic 9-Panel Grid`) so it stays a different color from the guides. Hide or delete that layer before export.
+Optional **9-panel grid**: nine separate orange vector rectangles (`Panel 1`–`Panel 9`) inside the safe area with **0.125″ gutters**, on layer `Comic 9-Panel Grid`. Drag or delete each with **Select Shapes**; hide the layer before export.
 
 ## Requirements
 

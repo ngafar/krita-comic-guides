@@ -81,7 +81,7 @@ class ComicGuidesDialog:
         self._snap = QtWidgets.QCheckBox("Snap to guides")
         self._snap.setChecked(True)
         self._nine_panel = QtWidgets.QCheckBox(
-            "Add 9-panel grid (orange vector layer in safe area)"
+            "Add 9-panel grid (editable orange vector layer)"
         )
         self._nine_panel.setChecked(True)
         for box in (

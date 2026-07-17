@@ -115,6 +115,32 @@ def safe_rect_in(preset: ComicPreset) -> tuple[float, float, float, float]:
     return safe_left, safe_top, safe_right, safe_bottom
 
 
+def nine_panel_rects_in(
+    preset: ComicPreset,
+) -> list[tuple[float, float, float, float]]:
+    """Return each panel as ``(left, top, right, bottom)`` in inches.
+
+    Reading order is left-to-right, top-to-bottom (comic page order).
+    """
+    left, top, right, bottom = safe_rect_in(preset)
+    width = right - left
+    height = bottom - top
+    cols = preset.panel_cols
+    rows = preset.panel_rows
+    gutter = preset.panel_gutter_in
+
+    panel_w = (width - (cols - 1) * gutter) / cols
+    panel_h = (height - (rows - 1) * gutter) / rows
+
+    rects: list[tuple[float, float, float, float]] = []
+    for row in range(rows):
+        for col in range(cols):
+            x0 = left + col * (panel_w + gutter)
+            y0 = top + row * (panel_h + gutter)
+            rects.append((x0, y0, x0 + panel_w, y0 + panel_h))
+    return rects
+
+
 def nine_panel_gutter_lines_in(
     preset: ComicPreset,
 ) -> tuple[list[float], list[float]]:

@@ -16,20 +16,20 @@ class ComicPreset:
     description: str = ""
 
 
-# 11×17 board @ typically 600 PPI:
-#   Bleed: 0.5″ margins  → 10″ × 16″
-#   Trim:  0.625″ margins → 9.75″ × 15.75″  (TrimLine.gds)
-#   Safe:  1.0″ margins  → 9″ × 15″         (SafeArea.gds)
+# 11×17 Bristol board — Standard USA comic dimensions:
+#   Full bleed: 10″ × 15⅜″   (½″ sides, 13/16″ top/bottom)
+#   Trim line:  9¾″ × 15″    (⅝″ sides, 1″ top/bottom)
+#   Safe area:  9″ × 14¼″    (1″ sides, 1⅜″ top/bottom)
 STANDARD_US_COMIC = ComicPreset(
     name="Standard US Comic — 11 × 17 in",
     page_width_in=11.0,
     page_height_in=17.0,
     vertical_in=(0.500, 0.625, 1.000, 10.000, 10.375, 10.500),
-    horizontal_in=(0.500, 0.625, 1.000, 16.000, 16.375, 16.500),
+    horizontal_in=(0.8125, 1.000, 1.375, 15.625, 16.000, 16.1875),
     panel_cols=3,
     panel_rows=3,
     panel_gutter_in=0.125,
-    description="Bleed 0.5″, trim 0.625″, safe 1″; 3×3 panels with 0.125″ gutters",
+    description="Bleed 10×15⅜, trim 9¾×15, safe 9×14¼; 3×3 panels with 0.125″ gutters",
 )
 
 PRESETS: dict[str, ComicPreset] = {

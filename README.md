@@ -10,17 +10,17 @@ A small Krita Python plugin that creates a ready-to-draw **US comic page** in on
 2. Places bleed, trim, and safe-area guides
 3. Adds nine editable orange panel rectangles on layer `Comic 9-Panel Grid`
 
-## Layout (from Photoshop Guide Layout exports)
+## Layout (11×17 Bristol board — Standard USA comic)
 
-| Zone | Margins | Size on 11×17 |
-|------|---------|----------------|
-| Full bleed | 0.500″ | 10″ × 16″ |
-| Trim | 0.625″ | 9.75″ × 15.75″ |
-| Safe area | 1.000″ | 9″ × 15″ |
+| Zone | Size | Side margins | Top/bottom margins |
+|------|------|--------------|--------------------|
+| Full bleed | 10″ × 15⅜″ | ½″ | 13/16″ |
+| Trim line | 9¾″ × 15″ | ⅝″ | 1″ |
+| Safe area | 9″ × 14¼″ | 1″ | 1⅜″ |
 
 ```text
 Vertical:   0.500, 0.625, 1.000, 10.000, 10.375, 10.500
-Horizontal: 0.500, 0.625, 1.000, 16.000, 16.375, 16.500
+Horizontal: 0.8125, 1.000, 1.375, 15.625, 16.000, 16.1875
 ```
 
 9-panel grid: `Panel 1`–`Panel 9` (left→right, top→bottom) with **0.125″ gutters**. Drag or delete each with **Select Shapes**; hide that layer before export. Guides do not appear in exports.

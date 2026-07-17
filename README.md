@@ -31,5 +31,5 @@ Source: [Blambot](https://blambot.com/pages/original-art-dimensions-for-american
 To quickly install from this repo:
 
 ```bash
-uv run python scripts/install.py --force
+uv run scripts/install.py --force
 ```

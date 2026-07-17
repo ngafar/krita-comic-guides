@@ -2,8 +2,8 @@
 
 A small Krita Python plugin that:
 
-1. Creates a new document: **11" × 17", @ 600 PPI**
-2. Adds bleed, trim and safe guides.
+1. Creates a new document: **11" × 17", 600 PPI**
+2. Adds bleed, trim, and safe-area guides.
 3. Creates a 9-panel vector grid.
 
 ## Install
@@ -12,12 +12,11 @@ A small Krita Python plugin that:
 2. In Krita: **Tools → Scripts → Import Python Plugin from File** and choose the zip.
 3. Restart Krita.
 
-## Usage 
+## Usage
 
 **Tools → Scripts → New US Comic Page (11×17)**.
 
-If you do not see the script, you might need to enable the plugin: **Settings → Configure Krita → Python Plugin Manager** → enable **Comic Page Guides**.
-
+If you do not see the script, enable the plugin under **Settings → Configure Krita → Python Plugin Manager** → **Comic Page Guides**, then restart Krita.
 
 ## Layout
 

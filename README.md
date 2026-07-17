@@ -1,35 +1,21 @@
 # Krita Comic Guides
 
-A small Krita Python plugin that creates a ready-to-draw **US comic page** in one click: an **11 × 17 in @ 600 PPI** document with bleed / trim / safe guides and a 9-panel vector grid.
+A small Krita Python plugin that:
 
-## What one click does
+1. Creates a new **11 × 17 in @ 600 PPI** document 
+2. Adds bleed, trim and safe guides.
+3. Creates a 9-panel vector grid.
 
-**Tools → Scripts → New US Comic Page (11×17)**
 
-1. Creates a new RGBA document: 11 × 17 in at 600 PPI (6600 × 10200 px)
-2. Places bleed, trim, and safe-area guides
-3. Adds nine editable orange panel rectangles on layer `Comic 9-Panel Grid`
+## Layout 
 
-## Layout (11×17 Bristol board — Standard USA comic)
+The guides are based on these dimensions:
 
-| Zone | Size | Side margins | Top/bottom margins |
-|------|------|--------------|--------------------|
-| Full bleed | 10″ × 15⅜″ | ½″ | 13/16″ |
-| Trim line | 9¾″ × 15″ | ⅝″ | 1″ |
-| Safe area | 9″ × 14¼″ | 1″ | 1⅜″ |
+![Comic page dimensions](https://cdn.shopify.com/s/files/1/0152/5779/6662/files/articles_artdimensions1.jpg?1924)
 
-```text
-Vertical:   0.500, 0.625, 1.000, 10.000, 10.375, 10.500
-Horizontal: 0.8125, 1.000, 1.375, 15.625, 16.000, 16.1875
-```
+Source: [Blambot](https://blambot.com/pages/original-art-dimensions-for-american-standard-comics)
 
-9-panel grid: `Panel 1`–`Panel 9` (left→right, top→bottom) with **0.125″ gutters**. Drag or delete each with **Select Shapes**; hide that layer before export. Guides do not appear in exports.
-
-## Requirements
-
-- Krita 5.3+ (guide scripting API)
-
-## Install into Krita
+## Install
 
 ### Option A — copy into resources (from this repo)
 
@@ -55,23 +41,3 @@ Installing alone is not enough — Krita leaves new Python plugins disabled unti
 4. Restart Krita again
 
 Then use **Tools → Scripts → New US Comic Page (11×17)**.
-
-### Uninstall
-
-```bash
-uv run python scripts/install.py --uninstall
-```
-
-## Layout
-
-```text
-comic_guides.desktop
-comic_guides/
-├── __init__.py          # registers the Extension
-├── comic_guides.py      # one-click menu action
-├── guides.py            # new document + GuidesConfig
-├── panel_grid.py        # 9-panel vector shapes
-└── presets.py           # inch presets + pixel conversion
-scripts/
-└── install.py           # copy into Krita’s pykrita folder
-```

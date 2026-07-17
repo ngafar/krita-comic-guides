@@ -1,7 +1,7 @@
 [project]
 name = "krita-comic-guides"
 version = "0.1.0"
-description = "Add your description here"
+description = "Krita plugin that adds bleed, trim, and safe-area guides for comic pages"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=comic_guides
+X-Python-2-Compatible=false
+Name=Comic Page Guides
+Comment=Add bleed, trim, and safe-area guides for comic book pages
